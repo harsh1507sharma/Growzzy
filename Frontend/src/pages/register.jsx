@@ -1,52 +1,35 @@
-
 import React, { useState } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
-export default function LoginPage() {
+export default function RegisterPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { register } = useAuth();
+  
+  const [role, setRole] = useState('Student');
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-    const getInitialRole = () => {
-    const searchParams = new URLSearchParams(location.search);
-    const roleParam = searchParams.get('role');
-
-    if (!roleParam) return 'Student';
-
-    // Normalize casing (e.g., "student" -> "Student")
-    const formattedRole = roleParam.charAt(0).toUpperCase() + roleParam.slice(1).toLowerCase();
-    
-    // Ensure it matches one of our valid tabs
-    if (['Student', 'Educator', 'Parent'].includes(formattedRole)) {
-      return formattedRole;
-    }
-    
-    return 'Student';
-  };
-
-  const [role, setRole] = useState(getInitialRole());
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
     
     try {
-      await login({ email, password });
+      await register({ name, email, password, role: role.toUpperCase() });
       
-      // Navigate based on role (or whatever logic you prefer)
+      // Navigate based on role
       if (role === 'Student') navigate('/student');
       else if (role === 'Educator') navigate('/educator');
       else if (role === 'Parent') navigate('/guardian');
       else navigate('/');
       
     } catch (err) {
-      setError(err.message || 'Login failed. Please check your credentials.');
+      setError(err.message || 'Registration failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -59,8 +42,8 @@ export default function LoginPage() {
       <nav className="flex justify-between items-center w-full px-8 py-6 max-w-7xl mx-auto absolute top-0 left-0 right-0 z-50">
         <div className="text-2xl font-bold text-[#b8fd4b] tracking-tight font-headline">Growzzy</div>
         <div className="hidden md:flex items-center gap-8">
-          <Link className="text-[#b8fd4b] font-bold border-b-2 border-[#b8fd4b] pb-1 font-label" to="/login">Sign In</Link>
-          <Link className="text-[#dee5ff] opacity-70 hover:opacity-100 transition-all duration-300 font-label" to="/register">Register</Link>
+          <Link to="/login" className="text-[#dee5ff] opacity-70 hover:opacity-100 transition-all duration-300 font-label">Sign In</Link>
+          <Link to="/register" className="text-[#b8fd4b] font-bold border-b-2 border-[#b8fd4b] pb-1 font-label">Register</Link>
         </div>
       </nav>
 
@@ -71,11 +54,11 @@ export default function LoginPage() {
         <div className="absolute top-1/4 -left-20 w-96 h-96 bg-[#b8fd4b]/10 rounded-full blur-[120px]"></div>
         <div className="absolute bottom-1/4 -right-20 w-96 h-96 bg-[#fed01b]/10 rounded-full blur-[120px]"></div>
         
-        <div className="w-full max-w-md z-10">
+        <div className="w-full max-w-md z-10 mt-20 mb-10">
           
-          <div className="text-center mb-10 mt-16 md:mt-0">
-            <h1 className="font-headline font-extrabold text-4xl mb-3 tracking-tight">The Academic Luminary</h1>
-            <p className="font-body italic text-lg text-[#dee5ff]/60">Step into your private sanctuary of knowledge.</p>
+          <div className="text-center mb-8">
+            <h1 className="font-headline font-extrabold text-4xl mb-3 tracking-tight">Join Growzzy</h1>
+            <p className="font-body italic text-lg text-[#dee5ff]/60">Begin your journey to knowledge.</p>
           </div>
           
           <div 
@@ -84,7 +67,7 @@ export default function LoginPage() {
           >
             
             {/* Role Tracker Tabs */}
-            <div className="flex p-1.5 mb-8 bg-[#000000] rounded-full border border-[#40485d]/10">
+            <div className="flex p-1.5 mb-6 bg-[#000000] rounded-full border border-[#40485d]/10">
               {['Student', 'Educator', 'Parent'].map((tabLabel) => (
                 <button
                   key={tabLabel}
@@ -108,15 +91,31 @@ export default function LoginPage() {
             )}
             
             {/* Submission Form */}
-            <form className="space-y-6" onSubmit={handleLogin}>
+            <form className="space-y-5" onSubmit={handleRegister}>
               
+               {/* Name Input */}
+               <div className="space-y-1">
+                <label className="block text-xs font-bold uppercase tracking-widest text-[#b8fd4b]/80 ml-1">Full Name</label>
+                <div className="relative">
+                  <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#dee5ff]/40 text-sm">person</span>
+                  <input 
+                    className="w-full bg-[#000000] border-none rounded-xl py-3 pl-12 pr-4 text-[#dee5ff] outline-none placeholder:text-[#dee5ff]/20 focus:ring-2 focus:ring-[#b8fd4b]/20 transition-all duration-300 font-label" 
+                    placeholder="Jane Doe" 
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
               {/* Email Input */}
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <label className="block text-xs font-bold uppercase tracking-widest text-[#b8fd4b]/80 ml-1">Email Address</label>
                 <div className="relative">
                   <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#dee5ff]/40 text-sm">alternate_email</span>
                   <input 
-                    className="w-full bg-[#000000] border-none rounded-xl py-4 pl-12 pr-4 text-[#dee5ff] outline-none placeholder:text-[#dee5ff]/20 focus:ring-2 focus:ring-[#b8fd4b]/20 transition-all duration-300 font-label" 
+                    className="w-full bg-[#000000] border-none rounded-xl py-3 pl-12 pr-4 text-[#dee5ff] outline-none placeholder:text-[#dee5ff]/20 focus:ring-2 focus:ring-[#b8fd4b]/20 transition-all duration-300 font-label" 
                     placeholder="curiosity@growzzy.edu" 
                     type="email"
                     value={email}
@@ -127,54 +126,42 @@ export default function LoginPage() {
               </div>
               
               {/* Password Input */}
-              <div className="space-y-2">
+              <div className="space-y-1">
                 <div className="flex justify-between items-center px-1">
                   <label className="text-xs font-bold uppercase tracking-widest text-[#b8fd4b]/80">Security Token</label>
-                  <a className="text-[10px] uppercase tracking-tighter text-[#dee5ff]/40 hover:text-[#b8fd4b] transition-colors" href="#">Forgot Key?</a>
                 </div>
                 <div className="relative">
                   <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#dee5ff]/40 text-sm">lock_open</span>
                   <input 
-                    className="w-full bg-[#000000] border-none rounded-xl py-4 pl-12 pr-4 text-[#dee5ff] outline-none placeholder:text-[#dee5ff]/20 focus:ring-2 focus:ring-[#b8fd4b]/20 transition-all duration-300 font-label" 
+                    className="w-full bg-[#000000] border-none rounded-xl py-3 pl-12 pr-4 text-[#dee5ff] outline-none placeholder:text-[#dee5ff]/20 focus:ring-2 focus:ring-[#b8fd4b]/20 transition-all duration-300 font-label" 
                     placeholder="••••••••••••" 
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    minLength={6}
                   />
                 </div>
               </div>
               
-              <div className="pt-4">
+              <div className="pt-2">
                 <button 
                   type="submit" 
                   disabled={isLoading}
-                  className="w-full bg-gradient-to-r from-[#b8fd4b] to-[#fed01b] py-4 rounded-full font-headline font-extrabold text-[#3d5e00] tracking-tight hover:scale-[1.02] active:scale-95 transition-all duration-300 shadow-xl shadow-[#b8fd4b]/20 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-gradient-to-r from-[#b8fd4b] to-[#fed01b] py-3.5 rounded-full font-headline font-extrabold text-[#3d5e00] tracking-tight hover:scale-[1.02] active:scale-95 transition-all duration-300 shadow-xl shadow-[#b8fd4b]/20 flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isLoading ? 'Accessing...' : 'Access Sanctuary'}
-                  {!isLoading && <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">arrow_forward</span>}
+                  {isLoading ? 'Registering...' : 'Create Account'}
+                  {!isLoading && <span className="material-symbols-outlined text-lg group-hover:translate-x-1 transition-transform">person_add</span>}
                 </button>
               </div>
             </form>
             
-            <div className="mt-8 pt-8 border-t border-[#40485d]/10 text-center">
-              <p className="text-sm text-[#dee5ff]/40 font-body">New to the editorial experience? <Link to="/register" className="text-[#fed01b] font-bold hover:underline">Join Growzzy</Link></p>
+            <div className="mt-6 pt-6 border-t border-[#40485d]/10 text-center">
+              <p className="text-sm text-[#dee5ff]/40 font-body">Already have an account? <Link to="/login" className="text-[#fed01b] font-bold hover:underline">Sign In</Link></p>
             </div>
           </div>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="bg-[#060e20] w-full px-8 py-12 flex flex-col md:flex-row justify-between items-center gap-4 mt-auto border-t border-[#40485d]/15">
-        <div className="text-lg font-black text-[#dee5ff] font-headline">Growzzy</div>
-        <div className="flex flex-wrap justify-center gap-6">
-          <a className="text-[#dee5ff]/60 hover:text-[#b8fd4b] transition-colors font-label text-sm tracking-wide" href="#">Privacy Policy</a>
-          <a className="text-[#dee5ff]/60 hover:text-[#b8fd4b] transition-colors font-label text-sm tracking-wide" href="#">Terms of Service</a>
-          <a className="text-[#dee5ff]/60 hover:text-[#b8fd4b] transition-colors font-label text-sm tracking-wide" href="#">Help Center</a>
-          <a className="text-[#dee5ff]/60 hover:text-[#b8fd4b] transition-colors font-label text-sm tracking-wide" href="#">Contact Us</a>
-        </div>
-        <p className="text-[#dee5ff]/60 font-label text-sm tracking-wide">© 2024 Growzzy Editorial EdTech. All rights reserved.</p>
-      </footer>
       
     </div>
   );
