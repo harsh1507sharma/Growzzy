@@ -1,32 +1,32 @@
 import React from 'react';
-import { 
-  Compass, Map, Gift, Settings, 
+import {
+  Compass, Map, Gift, Settings,
   LayoutDashboard, BookOpen, Users, BarChart3,
   LayoutGrid, Milestone, GraduationCap, LifeBuoy
 } from 'lucide-react'
-export default function Sidebar({role}) {
+export default function Sidebar({ role }) {
   const studentLinks = [
-    { icon: <Compass size={20}/>, label: "Compass" },
-    { icon: <Map size={20}/>, label: "Paths" },
-    { icon: <Gift size={20}/>, label: "Rewards" },
-    { icon: <Settings size={20}/>, label: "Settings" },
+    { icon: <Compass size={20} />, label: "Compass" },
+    { icon: <Map size={20} />, label: "Paths" },
+    { icon: <Gift size={20} />, label: "Rewards" },
+    { icon: <Settings size={20} />, label: "Settings" },
   ];
   const educatorLinks = [
-    { icon: <LayoutDashboard size={20}/>, label: "Dashboard" },
-    { icon: <BookOpen size={20}/>, label: "Curriculum" },
-    { icon: <Users size={20}/>, label: "Students" },
-    { icon: <BarChart3 size={20}/>, label: "Analytics" },
+    { icon: <LayoutDashboard size={20} />, label: "Dashboard" },
+    { icon: <BookOpen size={20} />, label: "Curriculum" },
+    { icon: <Users size={20} />, label: "Students" },
+    { icon: <BarChart3 size={20} />, label: "Analytics" },
   ];
   const guardianLinks = [
-    { icon: <LayoutGrid size={20}/>, label: "Overview" },
-    { icon: <Map size={20}/>, label: "Learning Path", active: true },
-    { icon: <Milestone size={20}/>, label: "Milestones" },
-    { icon: <GraduationCap size={20}/>, label: "Mentors" },
+    { icon: <LayoutGrid size={20} />, label: "Overview" },
+    { icon: <Map size={20} />, label: "Learning Path", active: true },
+    { icon: <Milestone size={20} />, label: "Milestones" },
+    { icon: <GraduationCap size={20} />, label: "Mentors" },
   ];
   const links = role === "student" ? studentLinks : role === "educator" ? educatorLinks : guardianLinks;
   return (
     <aside className="w-[260px] flex-shrink-0 bg-[#060e20] border-r-[1px] border-[rgba(64,72,93,0.2)] flex flex-col justify-between hidden lg:flex h-full py-6">
-      
+
       <div>
         {/* TOP SECTION: Dynamic based on role */}
         <div className="px-6 mb-8">
@@ -42,7 +42,7 @@ export default function Sidebar({role}) {
               </div>
             </div>
           ) : (
-            
+
             <>
               <h2 className="text-xl font-headline font-black text-white tracking-tight">
                 {role === "educator" ? "Institutional Hub" : "Your Sanctuary"}
@@ -53,17 +53,16 @@ export default function Sidebar({role}) {
             </>
           )}
         </div>
-        
+
         {/* MENU LINKS */}
         <nav className="flex flex-col mt-4">
           {links.map((link) => (
-            <div 
-              key={link.label} 
-              className={`flex items-center gap-4 px-6 py-3.5 cursor-pointer transition-all ${
-                link.active 
-                ? 'bg-[#192540]/60 text-[#b8fd4b] border-l-[3px] border-[#b8fd4b] shadow-[-10px_0_20px_-10px_rgba(184,253,75,0.2)]' 
-                : 'border-l-[3px] border-transparent text-[#dee5ff]/50 hover:text-[#dee5ff] hover:bg-[#192540]/30'
-              }`}
+            <div
+              key={link.label}
+              className={`flex items-center gap-4 px-6 py-3.5 cursor-pointer transition-all ${link.active
+                  ? 'bg-[#192540]/60 text-[#b8fd4b] border-l-[3px] border-[#b8fd4b] shadow-[-10px_0_20px_-10px_rgba(184,253,75,0.2)]'
+                  : 'border-l-[3px] border-transparent text-[#dee5ff]/50 hover:text-[#dee5ff] hover:bg-[#192540]/30'
+                }`}
             >
               <span className={link.active ? "text-[#b8fd4b]" : "text-[#dee5ff]/50 hover:text-[#dee5ff]"}>{link.icon}</span>
               <span className="text-[12px] font-bold tracking-widest">{link.label}</span>
@@ -73,7 +72,7 @@ export default function Sidebar({role}) {
         {/* GUARDIAN ACTIONS */}
         {role === "guardian" && (
           <div className="flex flex-col h-full mt-auto">
-            
+
             {/* Upgrade Card Wrapper */}
             <div className="mt-6 px-5 mb-auto">
               <div className="bg-[#1f2b49]/30 border border-[#40485d]/30 rounded-2xl p-4 shadow-inner">
@@ -90,7 +89,7 @@ export default function Sidebar({role}) {
                 <span className="text-[12px] font-bold">Help Center</span>
               </div>
             </div>
-            
+
           </div>
         )}
       </div>
@@ -102,7 +101,7 @@ export default function Sidebar({role}) {
           </button>
         </div>
       )}
-    
+
     </aside>
   );
 }

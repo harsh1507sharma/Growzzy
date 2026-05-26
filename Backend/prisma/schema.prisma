@@ -26,3 +26,15 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+// this is the lecture schema which educator is uploading .
+
+model Lecture {
+  id          String   @id @default(uuid())
+  title       String
+  description String?
+  videoUrl    String   // Cloudinary ya S3 ka link yahan save hoga
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  educatorId  String 
+}
