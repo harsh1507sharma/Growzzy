@@ -5,6 +5,10 @@ import authRoutes from './routes/auth';
 import uploadRoutes from './routes/upload_route';
 
 const app = express();
+console.log("Cloud Name:", process.env.CLOUDINARY_CLOUD_NAME);
+console.log("API Key:", process.env.CLOUDINARY_API_KEY);
+console.log("API Secret:", process.env.CLOUDINARY_API_SECRET);
+
 const port = process.env.PORT || 5000;
 
 app.use(cors());
