@@ -26,4 +26,22 @@ export const uploadVideoToCloudinary = (fileBuffer: Buffer): Promise<string> => 
 
         uploadStream.end(fileBuffer);
     });
-};  
+};
+
+//video delete helper function
+export const deleteVideoFromCloudinary = async (videoUrl: string): Promise<void> => {
+    // Extracts "growzzy_lectures/abc123" from full Cloudinary URL
+    const uploadIndex = videoUrl.indexOf('/upload/');
+    const afterUpload = videoUrl.substring(uploadIndex + 8); // "v123456/growzzy_lectures/abc123.mp4"
+
+    // Remove version segment (v + numbers)
+    const withoutVersion = afterUpload.replace(/^v\d+\//, ''); // "growzzy_lectures/abc123.mp4"
+
+    // Remove file extension
+    const publicId = withoutVersion.replace(/\.[^/.]+$/, ''); // "growzzy_lectures/abc123"
+
+    console.log('Deleting publicId:', publicId); // should print: growzzy_lectures/abc123
+
+    const result = await cloudinary.uploader.destroy(publicId, { resource_type: 'video' });
+    console.log('Cloudinary delete result:', result); // should print: { result: 'ok' }
+};

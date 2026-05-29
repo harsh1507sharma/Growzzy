@@ -3,6 +3,8 @@ import express from 'express';
 import cors from 'cors';
 import authRoutes from './routes/auth';
 import uploadRoutes from './routes/upload_route';
+import getLectureRoutes from './routes/getlecture_route';
+import deleteLectureRoutes from './routes/deletelecture_route';
 
 const app = express();
 console.log("Cloud Name:", process.env.CLOUDINARY_CLOUD_NAME);
@@ -16,6 +18,8 @@ app.use(express.json());
 
 app.use('/api/auth', authRoutes);
 app.use('/api', uploadRoutes);  // taaki ye '/api/upload' route ban sake
+app.use('/api', getLectureRoutes);  //get requeses ke liye '/api/lectures' route ban sake 
+app.use('/api', deleteLectureRoutes);  // delete requeses ke liye '/api/lectures/:id' route ban sake  
 
 app.get('/', (req, res) => {
   res.send('Grozzy Backend is running!');
